@@ -11,6 +11,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
 <body class="bg-gray-100">
@@ -22,7 +23,7 @@
     <main class="container mx-auto pt-4 mt-4">
         {{-- Display alert messages --}}
         @if (session('success'))
-            <x-alert type='success' message="{{ session('success') }}" />
+            <x-alert type='success' message="{{ session('success') }}" timeout="2000" />
         @endif
         @if (session('error'))
             <x-alert type='error' message="{{ session('error') }}" />
