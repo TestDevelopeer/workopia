@@ -16,13 +16,6 @@ class JobController extends Controller
 	public function index(): View
 	{
 		$jobs = Job::all();
-		/*[
-			'Web Developer',
-			'Database Admin',
-			'Software Engineer',
-			'Systems Analyst'
-		];*/
-
 		return view('jobs.index')->with('jobs', $jobs);
 	}
 
