@@ -55,13 +55,23 @@ class JobController extends Controller
 			'contact_phone' => 'nullable|string',
 			'company_name' => 'required|string',
 			'company_description' => 'nullable|string',
-			'company_logo' => 'nullable|image\mimes:jpeg,jpg,png,gif|max:2048',
+			'company_logo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
 			'company_website' => 'nullable|url'
 		]);
 
 		// Hardcoded user ID
 		$validatedData['user_id'] = 1;
 
+		// Check for image
+		if ($request->hasFile('company_logo')) {
+			// Store the file and get path
+			$path = $request->file('company_logo')->store('logos', 'public');
+
+			// Add path to validated data
+			$validatedData['company_logo'] = $path;
+		}
+
+		// Submit to database
 		Job::create($validatedData);
 
 		return redirect()->route('jobs.index')->with('success', 'Job listing created successfully');
