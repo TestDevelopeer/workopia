@@ -19,7 +19,7 @@ return new class extends Migration
 			$table->unsignedBigInteger('user_id')->after('id');
 			$table->integer('salary');
 			$table->string('tags')->nullable();
-			$table->enum('job_type', ['Full-Time', 'Part-Time', 'Contact', 'Temporary', 'Intership', 'Volunteer', 'On-Call'])->default('Full-Time');
+			$table->enum('job_type', ['Full-Time', 'Part-Time', 'Contract', 'Temporary', 'Intership', 'Volunteer', 'On-Call'])->default('Full-Time');
 			$table->boolean('remote')->default(false);
 			$table->text('requirements')->nullable();
 			$table->text('benefits')->nullable();
