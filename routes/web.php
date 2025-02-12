@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,9 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
-Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::middleware('auth')->group(function () {
+	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+	Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+	Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
+});
