@@ -79,7 +79,7 @@
                         Put "Job Application" as the subject of your email
                         and attach your resume.
                     </p>
-                    <div x-data="{ open: false }">
+                    <div x-data="{ open: false }" id="applicant-form">
                         <button @click="open = true"
                             class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium cursor-pointer text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
                             Apply Now
@@ -175,3 +175,59 @@
         </aside>
     </div>
 </x-layout>
+
+<script src="https://api-maps.yandex.ru/v3/?apikey={{ env('YANDEXMAP_API_KEY') }}&lang=en_EN"></script>
+<script>
+    initMap();
+
+    async function initMap() {
+        // Промис `ymaps3.ready` будет зарезолвлен, когда загрузятся все компоненты основного модуля API
+        await ymaps3.ready;
+
+        ymaps3.import.registerCdn('https://cdn.jsdelivr.net/npm/{package}', [
+            '@yandex/ymaps3-default-ui-theme@latest'
+        ]);
+        const {
+            YMapDefaultMarker
+        } = await ymaps3.import('@yandex/ymaps3-default-ui-theme');
+        const {
+            YMap,
+            YMapDefaultFeaturesLayer,
+            YMapDefaultSchemeLayer
+        } = ymaps3;
+        const searchParams = {
+            text: "{{ $job->city }} + ', ' + {{ $job->state }}"
+        };
+        const location = {
+            // Координаты центра карты
+            center: [37.588144, 55.733842],
+
+            // Уровень масштабирования
+            zoom: 12
+        };
+        const search = await ymaps3.search(searchParams);
+        if (search.length) {
+            location.center = search[0].geometry.coordinates;
+        }
+        // Иницилиазируем карту
+        const map = new YMap(
+            // Передаём ссылку на HTMLElement контейнера
+            document.getElementById('map'),
+
+            // Передаём параметры инициализации карты
+            {
+                location
+            }
+        );
+
+        // Добавляем слой для отображения схематической карты
+        map.addChild(new YMapDefaultFeaturesLayer());
+        map.addChild(new YMapDefaultSchemeLayer());
+        map.addChild(new YMapDefaultMarker({
+            coordinates: location.center,
+            title: "{{ $job->title }}",
+            subtitle: "{{ $job->company_name }}",
+            color: 'red'
+        }));
+    }
+</script>
